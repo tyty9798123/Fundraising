@@ -21,7 +21,8 @@
       </div>
     <% end %>
     <%= yield %>
-
+    <br>
+    <%= render partial: 'layouts/footer' %>
     <script>
       $(document).ready(function(){
         if (window.location.pathname.includes('users')){

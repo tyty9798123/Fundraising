@@ -1,13 +1,25 @@
+<style>
+    #content img{
+        max-width: 100%;
+    }
+    #content{
+        max-width: 100%;
+        word-break: break-all
+    }
+</style>
 <div class="container">
     <div class="row mt-5">
-        <div class="col-8">
+        
+        <div class="col-8" style="max-width: 80%;">
             <% if @project.video_url.include? "https://" %>
             <iframe width="730" height="400" src="<%= @project.video_url %>" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             <% else %>
             <iframe width="730" height="400" id="myiframe" src="about:blank" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             <% end %>
             <hr>
-            <%=  simple_format(@project.content) %>
+            <div id="content">
+                <%=  simple_format(@project.content) %>
+            </div>
         </div>
 
         <div class="col-4">
@@ -25,8 +37,48 @@
                 <p>已經有 10 個人贊助</p>
                 <br>
             </div>
+            <br><hr><br>
+            <div class="card p-3">
+                <h2>純貢獻</h2>
+                <h3>NT$ 100 / 每單位</h3>
+                <p>
+                純貢獻純貢獻純貢獻純貢獻純貢獻純貢獻純貢獻純貢獻純貢獻純貢獻純貢獻純貢獻
+                </p>
+                <div class="form-group">
+                    <label for="pure_number">贊助數量</label>
+                    <input type="text" class="form-control" id="pure_number" aria-describedby="" placeholder="">
+                </div>
+                <button type="button" class="btn btn-info">贊助</button>
+            </div>
+            <div class="card p-3 mt-3">
+                <h2>普通版</h2>
+                <h3>NT$ 100 / 每單位</h3>
+                <p>
+                普通版普通版普通版普通版普通版普通版普通版普通版普通版普通版普通版普通版
+                </p>
+                <div class="form-group">
+                    <label for="ordinary_number">贊助數量</label>
+                    <input type="text" class="form-control" id="ordinary_number" aria-describedby="" placeholder="">
+                </div>
+                <button type="button" class="btn btn-info">贊助</button>
+            </div>
+            <div class="card p-3 mt-3">
+                <h2>進階版</h2>
+                <h3>NT$ 500 / 每單位</h3>
+                <p>
+                進階版進階版進階版進階版進階版進階版進階版進階版進階版進階版進階版進階版
+                </p>
+                <div class="form-group">
+                    <label for="advanced_number">贊助數量</label>
+                    <input type="text" class="form-control" id="advanced_number" aria-describedby="" placeholder="">
+                </div>
+                <button type="button" class="btn btn-info">贊助</button>
+            </div>
+            
         </div>
     </div>
+    
+    
 </div>
 
 <script>
