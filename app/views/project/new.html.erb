@@ -1,0 +1,106 @@
+<div class="container">
+<div class="form-group mt-5 ">
+    <label for="name">專案名稱</label>
+    <input type="text" class="form-control" id="name" aria-describedby="" placeholder="">
+    <small id="" class="form-text text-muted">10 字元以上 30 字元以下</small>
+</div>
+<br>
+<div class="form-group">
+    <label for="description">簡述</label>
+    <input type="text" class="form-control" id="description" aria-describedby="" placeholder="">
+    <small id="" class="form-text text-muted">120 字元以下</small>
+</div>
+<br>
+<div class="form-group">
+    <label for="description">說明</label>
+    <textarea id="content" name="content"></textarea>
+</div>
+<br>
+<div class="input-group mb-3">
+  <div class="input-group-prepend">
+    <span class="input-group-text" id="inputGroupFileAddon01">上傳圖檔</span>
+  </div>
+  <div class="custom-file">
+    <input type="file" class="custom-file-input" id="image_url" onchange="readAsDataURL()" accept="image/x-png,image/gif,image/jpeg"  aria-describedby="image_url">
+    <label class="custom-file-label" for="image_url">選擇圖檔</label>
+  </div>
+</div>
+<br>
+<div id="image-result">
+</div>
+<br>
+
+<div class="form-group">
+    <label for="video_url">介紹影片嵌入連結</label>
+    <input type="text" class="form-control" id="video_url" aria-describedby="" placeholder="">
+</div>
+<br>
+<div class="form-group">
+    <label for="money">募資目標金額</label>
+    <input type="number" class="form-control" id="money" aria-describedby="" placeholder="">
+</div>
+<br>
+<div class="form-group">
+    <label for="money">募資截止日期</label>
+    <input type="datetime-local" class="form-control" id="deadline" aria-describedby="" placeholder="">
+</div>
+<br>
+<button type="button" onclick="sendData();" class="btn btn-primary btn-lg btn-block">刊登</button>
+
+
+</div>
+
+<br><br>
+<script src="https://cdn.ckeditor.com/4.12.1/standard/ckeditor.js"></script>
+<script>
+    CKEDITOR.replace( 'content' );
+    function readAsDataURL(){
+        var image_url = document.getElementById("image_url").files;
+        var image_result = document.getElementById("image-result");
+        var reader = new FileReader();
+        reader.readAsDataURL(image_url[0]);
+        reader.onload = function(e){
+            image_result.innerHTML = `<div align='center'><img width='400' class='img-thumbnail' src='${this.result}' /><br><br><button type="button" class="btn btn-danger" onclick="resetImage();">清空圖檔</button></div>`;
+        }  
+    }
+    var sendData = function(){
+        var csrfTokenTag = document.getElementsByName("csrf-token");
+        var token = csrfTokenTag[0].content;
+        var image_url = document.getElementById("image_url").files;
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('post', '/project', true);
+        xhr.setRequestHeader("X-Answer", "42");
+        xhr.setRequestHeader('Accept', 'application/json'); 
+
+        var formData = new FormData();
+        var str = $('[type=datetime-local]').val();
+        var d = new Date(str);
+        formData.append("name", $('#name').val());
+        formData.append("description", $('#description').val());
+        formData.append("content", CKEDITOR.instances.content.getData());
+        formData.append("image_url",  image_url[0]);
+        formData.append("video_url", $('#video_url').val());
+        formData.append("target_money", $('#money').val());
+        formData.append("deadline", d);
+        formData.append("authenticity_token", token);
+        
+        xhr.send(formData);
+
+        xhr.onload = function(){
+            var response = xhr.response;
+            var json_response = JSON.parse(response);
+
+            if (json_response.success == true){
+                alert('刊登成功');
+                location.href = '/';
+            }else{
+                alert('刊登失敗');
+            }
+        }
+    }
+    var resetImage = function(){
+        $('#image_url').val('');
+        $('#image-result').html('');
+    }
+</script>

@@ -1,0 +1,70 @@
+<div class="container">
+    <div class="row mt-5">
+        <div class="col-8">
+            <% if @project.video_url.include? "https://" %>
+            <iframe width="730" height="400" src="<%= @project.video_url %>" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <% else %>
+            <iframe width="730" height="400" id="myiframe" src="about:blank" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <% end %>
+            <hr>
+            <%=  simple_format(@project.content) %>
+        </div>
+
+        <div class="col-4">
+            <div class="card pt-2 pr-2 pl-2">
+                <p><b><%= @project.name %></b></p>
+                <p><b>募資中</b></p>
+                <h2 style="color: red;">NT$ 0</h2>
+                <h4>贊助目標: NT$ <%= @project.target_money %></h4>
+                <p style="color: red;">將於 ... 結束<p>
+                <p><b>募資中</b></p>
+                <div class="progress">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"  style="width: 75%"></div>
+                </div>
+                <br>
+                <p>已經有 10 個人贊助</p>
+                <br>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+var iframe = document.getElementById("myiframe");
+var html = "<div align='center'><h3 style='color: red;'>此專案沒有募資影片</h3></div>";
+
+iframe.contentWindow.document.open();
+iframe.contentWindow.document.write(html);
+iframe.contentWindow.document.close();
+
+setInterval(function() {
+var target = new Date("2038-06-04 01:00").getTime();     //把日期打在這裡
+var second = (target - Date.now()) / 1000 >> 0;
+
+console.log("距離：" + distance(second));
+
+}, 1000);
+
+function distance(x) {
+
+    var day = x / 86400 >> 0;
+
+    var hour;
+
+    if (x < 86400) {
+        hour = x / 3600 >> 0;
+    } else {
+        hour = x % 86400 / 3600 >> 0;
+    }
+
+    var minute = x % 3600 / 60 >> 0;
+    var second = x % 60;
+    if (second >= 0) {
+        return day + "天" + hour + "小時" + minute + "分鐘" + second + "秒";
+    }
+    else {
+        return "時間已經過了";
+    }
+
+}
+</script>
