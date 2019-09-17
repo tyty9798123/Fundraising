@@ -7,6 +7,7 @@
         word-break: break-all
     }
 </style>
+
 <div class="container">
     <div class="row mt-5">
         
@@ -28,7 +29,8 @@
                 <p><b>募資中</b></p>
                 <h2 style="color: red;">NT$ 0</h2>
                 <h4>贊助目標: NT$ <%= @project.target_money %></h4>
-                <p style="color: red;">將於 ... 結束<p>
+                <div id="proj-datetime" style="display: none;"><%= @project.deadline.strftime("%Y-%m-%dT%H:%M") %></div>
+                <p style="color: red;" id="will_end">募資將於 ... 結束<p>
                 <p><b>募資中</b></p>
                 <div class="progress">
                     <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"  style="width: 75%"></div>
@@ -48,7 +50,7 @@
                     <label for="pure_number">贊助數量</label>
                     <input type="text" class="form-control" id="pure_number" aria-describedby="" placeholder="">
                 </div>
-                <button type="button" class="btn btn-info">贊助</button>
+                <button type="button" class="btn btn-info" id="pure_btn">贊助</button>
             </div>
             <div class="card p-3 mt-3">
                 <h2>普通版</h2>
@@ -60,7 +62,7 @@
                     <label for="ordinary_number">贊助數量</label>
                     <input type="text" class="form-control" id="ordinary_number" aria-describedby="" placeholder="">
                 </div>
-                <button type="button" class="btn btn-info">贊助</button>
+                <button type="button" class="btn btn-info" id="ordinary_btn">贊助</button>
             </div>
             <div class="card p-3 mt-3">
                 <h2>進階版</h2>
@@ -72,7 +74,7 @@
                     <label for="advanced_number">贊助數量</label>
                     <input type="text" class="form-control" id="advanced_number" aria-describedby="" placeholder="">
                 </div>
-                <button type="button" class="btn btn-info">贊助</button>
+                <button type="button" class="btn btn-info" id="advanced_btn">贊助</button>
             </div>
             
         </div>
@@ -89,13 +91,15 @@ iframe.contentWindow.document.open();
 iframe.contentWindow.document.write(html);
 iframe.contentWindow.document.close();
 
-setInterval(function() {
-var target = new Date("2038-06-04 01:00").getTime();     //把日期打在這裡
-var second = (target - Date.now()) / 1000 >> 0;
+window.onload = function(){
+    setInterval(function() {
+    var proj_datetime = document.getElementById('proj-datetime');
+    var target = new Date(proj_datetime.innerHTML).getTime();     //把日期打在這裡
+    var second = (target - Date.now()) / 1000 >> 0;
+        $('#will_end').html("募資將於 " + distance(second) + " 結束")
+    }, 1000);
+}
 
-console.log("距離：" + distance(second));
-
-}, 1000);
 
 function distance(x) {
 
