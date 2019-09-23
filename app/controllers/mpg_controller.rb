@@ -7,7 +7,17 @@ class MpgController < ApplicationController
     end
 
     def create_order
-      #@user_id= current_user.id
+      
+      merchantID = 'MS15746696' #填入你的商店號碼
+      version = '1.5'
+      respondType = 'JSON'
+      timeStamp = Time.now.to_i.to_s
+      merchantOrderNo = Time.now.to_i.to_s
+      itemDesc = Project.find_by({id: params[:project_id]}).name + " 募資"
+      hashKey = 'EHb1JZZqWyYrRrafyoJSh00jkhTtKqKt' #填入你的key
+      hashIV = 'XQVawXqs3ClPQoPX' #填入你的IV
+
+      # 檢查使用者是否登入
       unless user_signed_in?
         flash[:notice] = "您沒有登入，無法進行募資動作。"
         return redirect_to "/"
@@ -20,7 +30,8 @@ class MpgController < ApplicationController
 
       json = {
         projects_id: @project_id,
-        users_id: current_user.id
+        users_id: current_user.id,
+        order_no: merchantOrderNo
       }
       order_create_stmt = Order.not_pay_yet.create(json)
 
@@ -30,8 +41,6 @@ class MpgController < ApplicationController
       end
 
       orderID = order_create_stmt.id
-
-
 
       
       if @order_type == "advanced"
@@ -45,14 +54,7 @@ class MpgController < ApplicationController
         amt = @quantity.to_i * 100
       end
 
-      merchantID = 'MS15746696' #填入你的商店號碼
-      version = '1.5'
-      respondType = 'JSON'
-      timeStamp = Time.now.to_i.to_s
-      merchantOrderNo = "Test"  + Time.now.to_i.to_s
-      itemDesc = "商品"
-      hashKey = 'EHb1JZZqWyYrRrafyoJSh00jkhTtKqKt' #填入你的key
-      hashIV = 'XQVawXqs3ClPQoPX' #填入你的IV
+      
   
       data = "MerchantID=#{merchantID}&RespondType=#{respondType}&TimeStamp=#{timeStamp}&Version=#{version}&MerchantOrderNo=#{merchantOrderNo}&Amt=#{amt}&ItemDesc=#{itemDesc}&TradeLimit=120"
       puts data
@@ -75,10 +77,34 @@ class MpgController < ApplicationController
   
         checkValue = "HashKey=#{hashKey}&#{tradeInfo}&HashIV=#{hashIV}"
         if tradeSha == Digest::SHA256.hexdigest(checkValue).upcase
-       rawTradeInfo = decrypt_data(tradeInfo, hashKey, hashIV, 'AES-256-CBC')
-          Logger.new("#{Rails.root}/notify.log").try("info", rawTradeInfo)
-      result = JSON.parse(rawTradeInfo)
-          Logger.new("#{Rails.root}/notify.log").try("info", result)
+          rawTradeInfo = decrypt_data(tradeInfo, hashKey, hashIV, 'AES-256-CBC')
+          result = JSON.parse(rawTradeInfo)
+          # 得到 MerchantOrderNo
+          __order_no = result.MerchantOrderNo
+          # 設置 已付款
+          __is_payment_stmt = Order.find_by({order_no: __order_no}).update({is_payment: 1})
+          
+          unless __is_payment_stmt
+            # send email to website servers
+          end
+
+          # 設置 支付方式 （ PaymentType )
+          __PaymentType = result.PaymentType
+
+          __set_payment_type = Order.find_by({order_no: __order_no}).order_details.update({payment_type: __PaymentType})
+
+          unless __set_payment_type
+            # send email to website servers
+          end
+
+          # 設置 PayTime
+          __PayTime = result.PayTime
+          __set_paytime_stmt = Order.find_by({order_no: __order_no}).update({pay_time: __PayTime})
+
+          unless __set_paytime_stmt
+            # send email to website servers
+          end
+          
         end
       end
   
