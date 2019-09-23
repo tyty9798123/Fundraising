@@ -1,0 +1,15 @@
+<form action="https://ccore.spgateway.com/MPG/mpg_gateway" accept-charset="UTF-8" method="post">
+  <input type='hidden' name='MerchantID' value='<%= @merchantID %>'>
+  <input type='hidden' name='TradeInfo' value='<%= @tradeInfo %>'>
+  <input type='hidden' name='TradeSha' value='<%= @tradeSha%>'>
+  <input type="hidden" name='Version' value='<%= @version %>'>
+  <div class="m-5">
+    <span style="color: red; font-size: 30px;">自動切換頁面中...</span><br>
+    <button type="submit" id="go_blue_star" class="btn btn-success">手動切換頁面</button>
+  <div>
+</form>
+<script>
+    $(document).ready(function(){
+        $("#go_blue_star").get(0).click();
+    })
+</script>

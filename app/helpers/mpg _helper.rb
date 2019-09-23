@@ -1,0 +1,2 @@
+module Mpg Helper
+end

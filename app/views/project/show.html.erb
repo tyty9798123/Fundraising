@@ -46,11 +46,15 @@
                 <p>
                 純貢獻純貢獻純貢獻純貢獻純貢獻純貢獻純貢獻純貢獻純貢獻純貢獻純貢獻純貢獻
                 </p>
+                <form method="get" action="/mpg/create_order">
                 <div class="form-group">
                     <label for="pure_number">贊助數量</label>
-                    <input type="text" class="form-control" id="pure_number" aria-describedby="" placeholder="">
+                    <input type="hidden" name="project_id" value="<%= @project.id %>">
+                    <input type="hidden" name="order_type" value="pure">
+                    <input type="text" class="form-control" id="pure_number" name="quantity" aria-describedby="" placeholder="">
                 </div>
-                <button type="button" class="btn btn-info" id="pure_btn">贊助</button>
+                <button type="submit" class="btn btn-info" id="pure_btn">贊助</button>
+                </form>
             </div>
             <div class="card p-3 mt-3">
                 <h2>普通版</h2>
@@ -58,11 +62,15 @@
                 <p>
                 普通版普通版普通版普通版普通版普通版普通版普通版普通版普通版普通版普通版
                 </p>
-                <div class="form-group">
-                    <label for="ordinary_number">贊助數量</label>
-                    <input type="text" class="form-control" id="ordinary_number" aria-describedby="" placeholder="">
-                </div>
-                <button type="button" class="btn btn-info" id="ordinary_btn">贊助</button>
+                <form method="get" action="/mpg/create_order">
+                    <div class="form-group">
+                        <label for="ordinary_number">贊助數量</label>
+                        <input type="hidden" name="project_id" value="<%= @project.id %>">
+                        <input type="hidden" name="order_type" value="ordinary">
+                        <input type="text" class="form-control" name="quantity" id="ordinary_number" aria-describedby="" placeholder="">
+                    </div>
+                    <button type="submit" class="btn btn-info" id="ordinary_btn">贊助</button>
+                </form>
             </div>
             <div class="card p-3 mt-3">
                 <h2>進階版</h2>
@@ -70,11 +78,15 @@
                 <p>
                 進階版進階版進階版進階版進階版進階版進階版進階版進階版進階版進階版進階版
                 </p>
+                <form method="get" action="/mpg/create_order">
                 <div class="form-group">
                     <label for="advanced_number">贊助數量</label>
-                    <input type="text" class="form-control" id="advanced_number" aria-describedby="" placeholder="">
+                    <input type="hidden" name="project_id" value="<%= @project.id %>">
+                    <input type="hidden" name="order_type" value="advanced">
+                    <input type="text" class="form-control" id="advanced_number" name="quantity" aria-describedby="" placeholder="">
                 </div>
-                <button type="button" class="btn btn-info" id="advanced_btn">贊助</button>
+                <button type="submit" class="btn btn-info" id="advanced_btn">贊助</button>
+                </form>
             </div>
             
         </div>
