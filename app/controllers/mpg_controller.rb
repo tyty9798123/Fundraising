@@ -85,15 +85,17 @@ class MpgController < ApplicationController
           __is_payment_stmt = Order.find_by({order_no: __order_no}).update({is_payment: 1})
           
           unless __is_payment_stmt
+            Logger.new("#{Rails.root}/notify.log").try("info", "__is_payment_stmt")
             # send email to website servers
           end
 
           # 設置 支付方式 （ PaymentType )
           __PaymentType = result.PaymentType
-
+          
           __set_payment_type = Order.find_by({order_no: __order_no}).order_details.update({payment_type: __PaymentType})
 
           unless __set_payment_type
+            Logger.new("#{Rails.root}/notify.log").try("info", "__set_payment_type")
             # send email to website servers
           end
 
@@ -102,6 +104,7 @@ class MpgController < ApplicationController
           __set_paytime_stmt = Order.find_by({order_no: __order_no}).update({pay_time: __PayTime})
 
           unless __set_paytime_stmt
+            Logger.new("#{Rails.root}/notify.log").try("info", "__set_paytime_stmt")
             # send email to website servers
           end
           
