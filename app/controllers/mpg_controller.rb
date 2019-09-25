@@ -1,6 +1,6 @@
 class MpgController < ApplicationController
     require 'digest'
-    skip_before_action :verify_authenticity_token, only: [:return, :notif, :create_order]
+    skip_before_action :verify_authenticity_token, only: [:return, :notify, :create_order]
 
     def index
         
@@ -9,7 +9,7 @@ class MpgController < ApplicationController
     def create_order
       
       merchantID = 'MS15746696' #填入你的商店號碼
-      version = '1.5'
+      version = '1.4'
       respondType = 'JSON'
       timeStamp = Time.now.to_i.to_s
       merchantOrderNo = Time.now.to_i.to_s
@@ -71,26 +71,34 @@ class MpgController < ApplicationController
     def notify
       hashKey = 'EHb1JZZqWyYrRrafyoJSh00jkhTtKqKt'
       hashIV = 'XQVawXqs3ClPQoPX'
+Logger.new("#{Rails.root}/notify.log").try("info", "1")
       if params["Status"] == "SUCCESS"
         tradeInfo = params["TradeInfo"]
         tradeSha = params["TradeSha"]
-  
+  Logger.new("#{Rails.root}/notify.log").try("info", "2")
         checkValue = "HashKey=#{hashKey}&#{tradeInfo}&HashIV=#{hashIV}"
         if tradeSha == Digest::SHA256.hexdigest(checkValue).upcase
           rawTradeInfo = decrypt_data(tradeInfo, hashKey, hashIV, 'AES-256-CBC')
-          result = JSON.parse(rawTradeInfo)
-          # 得到 MerchantOrderNo
-          __order_no = result.MerchantOrderNo
-          # 設置 已付款
+Logger.new("#{Rails.root}/notify.log").try("info", "3")
+
+	  jsonResult = JSON.parse(rawTradeInfo)
+	  result = jsonResult["Result"]
+Logger.new("#{Rails.root}/notify.log").try("info", "4")
+	  # 得到 MerchantOrderNo
+          __order_no = result["MerchantOrderNo"]
+          Logger.new("#{Rails.root}/notify.log").try("info", "5")
+		          Logger.new("#{Rails.root}/notify.log").try("info", __order_no)
+	  # 設置 已付款
           __is_payment_stmt = Order.find_by({order_no: __order_no}).update({is_payment: 1})
-          
+          Logger.new("#{Rails.root}/notify.log").try("info", "6")
+
           unless __is_payment_stmt
             Logger.new("#{Rails.root}/notify.log").try("info", "__is_payment_stmt")
             # send email to website servers
           end
 
           # 設置 支付方式 （ PaymentType )
-          __PaymentType = result.PaymentType
+          __PaymentType = result["PaymentType"]
           
           __set_payment_type = Order.find_by({order_no: __order_no}).order_details.update({payment_type: __PaymentType})
 
@@ -100,7 +108,7 @@ class MpgController < ApplicationController
           end
 
           # 設置 PayTime
-          __PayTime = result.PayTime
+          __PayTime = result["PayTime"]
           __set_paytime_stmt = Order.find_by({order_no: __order_no}).update({pay_time: __PayTime})
 
           unless __set_paytime_stmt
@@ -181,7 +189,7 @@ class MpgController < ApplicationController
       loop do
         lastHex = data.last.bytes.first
         break if lastHex >= blocksize
-        data = data[0...-lastHex]
+        data = data[0...-1]
       end
       return data
     end
