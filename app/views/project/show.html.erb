@@ -30,7 +30,7 @@
                 <h2 style="color: red;">NT$ 0</h2>
                 <h4>贊助目標: NT$ <%= @project.target_money %></h4>
                 <div id="proj-datetime" style="display: none;"><%= @project.deadline.strftime("%Y-%m-%dT%H:%M") %></div>
-                <p style="color: red;" id="will_end">募資將於 ... 結束<p>
+                <p style="color: red;" id="will_end">募資將於  結束<p>
                 <p><b>募資中</b></p>
                 <div class="progress">
                     <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"  style="width: 75%"></div>
@@ -96,12 +96,15 @@
 </div>
 
 <script>
-var iframe = document.getElementById("myiframe");
 var html = "<div align='center'><h3 style='color: red;'>此專案沒有募資影片</h3></div>";
 
-iframe.contentWindow.document.open();
-iframe.contentWindow.document.write(html);
-iframe.contentWindow.document.close();
+if ( document.getElementById("myiframe") ){
+    var iframe = document.getElementById("myiframe");
+    iframe.contentWindow.document.open();
+    iframe.contentWindow.document.write(html);
+    iframe.contentWindow.document.close();
+}
+
 
 window.onload = function(){
     setInterval(function() {

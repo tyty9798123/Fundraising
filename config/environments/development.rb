@@ -63,4 +63,24 @@ config.hosts << "rails.meyinweb.com"
 
   config.time_zone = 'Taipei'
   config.active_record.default_timezone = :local 
+
+   # ====================
+  # email
+  # ====================
+  # for email 
+  config.action_mailer.default_url_options = {protocol: 'http', host: 'localhost:3000' }
+  # config.action_mailer.default_url_options = {protocol: 'https', host: 'www.meyinweb.com' }
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.perform_deliveries = true
+  
+  config.action_mailer.smtp_settings = {
+    address: "smtp.gmail.com",
+    port: "587",
+    domain: "gmail",
+    authentication: "plain",
+    user_name: "tyty979812@gmail.com",
+    password: "a20161223",
+    enable_starttls_auto: true
+  }
 end
