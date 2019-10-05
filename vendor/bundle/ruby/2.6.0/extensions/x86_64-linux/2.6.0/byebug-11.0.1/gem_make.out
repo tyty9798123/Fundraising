@@ -1,0 +1,19 @@
+current directory: /home/PB/Projects/Fundraising/vendor/bundle/ruby/2.6.0/gems/byebug-11.0.1/ext/byebug
+/home/PB/.rvm/rubies/ruby-2.6.3/bin/ruby -I /home/PB/.rvm/rubies/ruby-2.6.3/lib/ruby/2.6.0 -r ./siteconf20191005-12754-11fj4xn.rb extconf.rb
+creating Makefile
+
+current directory: /home/PB/Projects/Fundraising/vendor/bundle/ruby/2.6.0/gems/byebug-11.0.1/ext/byebug
+make "DESTDIR=" clean
+
+current directory: /home/PB/Projects/Fundraising/vendor/bundle/ruby/2.6.0/gems/byebug-11.0.1/ext/byebug
+make "DESTDIR="
+compiling breakpoint.c
+compiling byebug.c
+compiling context.c
+compiling locker.c
+compiling threads.c
+linking shared-object byebug/byebug.so
+
+current directory: /home/PB/Projects/Fundraising/vendor/bundle/ruby/2.6.0/gems/byebug-11.0.1/ext/byebug
+make "DESTDIR=" install
+/usr/bin/install -m 0755 byebug.so ./.gem.20191005-12754-1x38ktl/byebug
